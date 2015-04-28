@@ -126,7 +126,7 @@ nodes.add( {id: INFID, label: 'Inf'});
 // create an array with edges
 var edges = new vis.DataSet();
 
-var MAXN = 500;
+var MAXN = 800;
 var INF = 10000;
 var container;
 var data;
@@ -166,8 +166,22 @@ $(document).ready(function() {
   };
 
   options = { 
+    nodes: {
+      shape: 'dot',
+      radiusMin: 10,
+      radiusMax: 30,
+      fontSize: 12,
+      fontFace: "Tahoma"
+    },
+    edges: {
+        width: 0.15,
+        inheritColor: "from"
+    },
     groups: groups,
+    stabilize: false,
     smoothCurves: false,
+    physics: {barnesHut: {gravitationalConstant: -80000, springConstant: 0.001, springLength: 200}},
+    hideEdgesOnDrag: true
   };
 
   for (var n = 1; n <= MAXN; n++) {
