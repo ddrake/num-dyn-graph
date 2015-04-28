@@ -168,17 +168,12 @@ $(document).ready(function() {
   options = { 
     groups: groups,
     smoothCurves: false,
-    stabilize: true
   };
 
-  network = new vis.Network(container, data, options);
-
   for (var n = 1; n <= MAXN; n++) {
-    if (n === 149)
-    {
-      console.log("149 should be in the group with 1");
-    }
     addIfNotInGraph(n);
-  };  
+  }; 
+
+  network = new vis.Network(container, data, options);
 })
 
