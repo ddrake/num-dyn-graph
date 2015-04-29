@@ -30,6 +30,10 @@ function addIfNotInGraph(n)
 function buildPath(curPath, n)
 {
   var s = sigma(n);
+  if (s === 12496 || s === 14288 || s === 15472 || s === 14536 || s === 14264)
+  {
+    console.log("sociable");
+  }
   if (s >= INF) 
   {
     // assume sequence diverges to infinity so add path to the infinity node
@@ -84,6 +88,7 @@ function addPathWithCycleToNetwork(curPath, s, group)
     var n = curPath[i];
     nodes.add(nodeFor(n, group));
     edges.add(edgeFor(n, nn));
+    nn = n;
   }
   edges.add(edgeFor(last, s));
 }
@@ -114,8 +119,8 @@ nodes.add( {id: INFID, label: 'Inf', group: 0});
 // create an array with edges
 var edges = new vis.DataSet();
 
-var MAXN = 500;
-var INF = 10000;
+var MAXN = 20000;
+var INF = 1000000;
 var container;
 var data;
 var options;
@@ -161,10 +166,14 @@ $(document).ready(function() {
   };
 
   options = { 
+    clustering: true,
     groups: groups,
-    stabilize: false,
+    stabilize: true,
     smoothCurves: false,
-    hideEdgesOnDrag: true
+    hideEdgesOnDrag: true,
+    edges: {
+      style: 'arrow'
+    }
   };
 
   for (var n = 1; n <= MAXN; n++) {
@@ -172,18 +181,18 @@ $(document).ready(function() {
   }; 
 
   network = new vis.Network(container, data, options);
-  $('#network').dblclick(function() {
-    network.destroy();
-    data = {
-      nodes: nodes.get({ 
-        filter: function (item) {
-          return (item.group == displayGroup);
-        }
-      }),
-      edges: edges
-    };
-    network = new vis.Network(container, data, options);
-    cycleDisplayGroup();
-  })
+  // $('#network').dblclick(function() {
+  //   network.destroy();
+  //   data = {
+  //     nodes: nodes.get({ 
+  //       filter: function (item) {
+  //         return (item.group == displayGroup);
+  //       }
+  //     }),
+  //     edges: edges
+  //   };
+  //   network = new vis.Network(container, data, options);
+  //   cycleDisplayGroup();
+  // })
 })
 
