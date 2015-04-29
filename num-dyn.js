@@ -169,7 +169,6 @@ $(document).ready(function() {
     clustering: true,
     groups: groups,
     stabilize: true,
-    smoothCurves: false,
     hideEdgesOnDrag: true,
     edges: {
       style: 'arrow'
