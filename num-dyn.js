@@ -38,9 +38,8 @@ function buildPath(curPath, n)
   else if (curPath.indexOf(s) >= 0) 
   {
     // the current path reveals a cycle (and hence is not already in the network)
-    curPath.push(s);
     var group = getNewGroup();
-    addPathWithCycleToNetwork(curPath, group);
+    addPathWithCycleToNetwork(curPath, s, group);
   }
   else 
   {
@@ -72,32 +71,21 @@ function addCurPathToNode(curPath, destNodeID)
   }
 }
 
-// assumes that every path has at least two elements (which may have the same value)
-// if they do, we just want a single node and a self-referencing edge
-// otherwise, create the final node, then work backwards from it, creating nodes and edges
+// create the final node, then work backwards from it, creating nodes and edges
 // when we reach a node with the same value as the final node, close the loop by adding 
 // a special edge.
-function addPathWithCycleToNetwork(curPath, group) 
+function addPathWithCycleToNetwork(curPath, s, group) 
 {
   var li = curPath.length - 1;
   var last = curPath[li];
-  var nn = last;
+  var nn = last
   nodes.add(nodeFor(nn, group));
-  for (var i = li-1; i >= 0; i--) {
+  for (var i = li - 1; i >= 0; i--) {
     var n = curPath[i];
+    nodes.add(nodeFor(n, group));
     edges.add(edgeFor(n, nn));
-    if (n === last) 
-    {
-      if (curPath.length >= 3) 
-      {
-        edges.add(edgeFor(last, n));
-      }
-    }
-    else 
-    {
-      nodes.add(nodeFor(n, group));
-    }
   }
+  edges.add(edgeFor(last, s));
 }
 
 function nodeFor(n, group)
@@ -121,12 +109,12 @@ function getNewGroup()
 // create an array with nodes
 var nodes = new vis.DataSet();
 var INFID = 'inf';
-nodes.add( {id: INFID, label: 'Inf'});
+nodes.add( {id: INFID, label: 'Inf', group: 0});
 
 // create an array with edges
 var edges = new vis.DataSet();
 
-var MAXN = 800;
+var MAXN = 500;
 var INF = 10000;
 var container;
 var data;
@@ -155,7 +143,14 @@ var groups = groups = {
   19: {color: {background: "#608BB7"}}
 };
 
+function cycleDisplayGroup()
+{
+  if (displayGroup > groupCt) displayGroup = 0;
+  else displayGroup += 1;
+}
+
 var groupCt = 0;
+var displayGroup = 0;
 
 $(document).ready(function() {
   // create a network
@@ -177,5 +172,18 @@ $(document).ready(function() {
   }; 
 
   network = new vis.Network(container, data, options);
+  $('#network').dblclick(function() {
+    network.destroy();
+    data = {
+      nodes: nodes.get({ 
+        filter: function (item) {
+          return (item.group == displayGroup);
+        }
+      }),
+      edges: edges
+    };
+    network = new vis.Network(container, data, options);
+    cycleDisplayGroup();
+  })
 })
 
