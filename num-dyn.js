@@ -173,6 +173,10 @@ $(document).ready(function() {
     addIfNotInGraph(n);
   }; 
 
+  $('#network').dblclick(function(){
+    network.zoomExtent();
+  })
+
   network = new vis.Network(container, data, options);
 })
 
