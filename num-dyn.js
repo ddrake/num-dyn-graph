@@ -3,19 +3,6 @@ function toJSON (obj) {
   return JSON.stringify(obj, null, 4);
 }
 
-
-function sigma(n)
-{
-  var sum = 0;
-  var max = (n === 1 ? 1 : n/2);
-  for (var i = 1; i <= max; i++) {
-    if (n % i === 0) {
-      sum += i;
-    }
-  }
-  return sum;
-}
-
 // check if the number n is already in the graph, adding its path if not
 function addIfNotInGraph(n)
 {
@@ -109,6 +96,19 @@ function getNewGroup()
   return groupCt
 }
 
+// simple function to compute the sum of proper divisors of a number
+// for simplicity we're defining the sum of proper divisors of 1 to be 1
+function sigma(n)
+{
+  var sum = 0;
+  var max = (n === 1 ? 1 : n/2);
+  for (var i = 1; i <= max; i++) {
+    if (n % i === 0) {
+      sum += i;
+    }
+  }
+  return sum;
+}
 
 
 // create an array with nodes
@@ -148,14 +148,7 @@ var groups = groups = {
   19: {color: {background: "#608BB7"}}
 };
 
-function cycleDisplayGroup()
-{
-  if (displayGroup > groupCt) displayGroup = 0;
-  else displayGroup += 1;
-}
-
 var groupCt = 0;
-var displayGroup = 0;
 
 $(document).ready(function() {
   // create a network
@@ -167,6 +160,7 @@ $(document).ready(function() {
 
   options = { 
     clustering: true,
+    keyboard: true,
     groups: groups,
     stabilize: true,
     hideEdgesOnDrag: true,
@@ -180,18 +174,5 @@ $(document).ready(function() {
   }; 
 
   network = new vis.Network(container, data, options);
-  // $('#network').dblclick(function() {
-  //   network.destroy();
-  //   data = {
-  //     nodes: nodes.get({ 
-  //       filter: function (item) {
-  //         return (item.group == displayGroup);
-  //       }
-  //     }),
-  //     edges: edges
-  //   };
-  //   network = new vis.Network(container, data, options);
-  //   cycleDisplayGroup();
-  // })
 })
 
